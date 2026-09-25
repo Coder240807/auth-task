@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:authtask/services/api.dart';
+import 'package:authtask/screens/user_screen.dart';
+import 'package:authtask/models/users.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,11 +27,22 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
     try {
       final data = await _api.postData(username, password);
+      final accessToken = data['accessToken'];
+      final profile = await _api.getData(accessToken);
 
       setState(() {
         _usernameEditingController.clear();
         _passwordEditingController.clear();
       });
+
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UserScreen(user: User.fromJson(profile)),
+          ),
+        );
+      }
     } catch (e) {
       throw Error();
     } finally {
