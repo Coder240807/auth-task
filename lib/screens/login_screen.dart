@@ -23,6 +23,13 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _usernameEditingController.dispose();
+    _passwordEditingController.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleLogin(String username, String password) async {
     setState(() => _isLoading = true);
     try {
