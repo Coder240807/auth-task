@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:authtask/services/api.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +13,28 @@ class _LoginScreenState extends State<LoginScreen> {
       TextEditingController();
   final TextEditingController _passwordEditingController =
       TextEditingController();
+
+  final Api _api = Api();
+
+  @override
+  void initState() {
+    super.initState();
+    _handleLogin(
+      _usernameEditingController.text,
+      _passwordEditingController.text,
+    );
+  }
+
+  Future<void> _handleLogin(String username, String password) async {
+    setState(() => _isLoading = true);
+    try {
+      final data = await _api.postData(username, password);
+    } catch (e) {
+      throw Error();
+    } finally {
+      _isLoading = false;
+    }
+  }
 
   bool _isLoading = false;
 
@@ -37,7 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                if (_isLoading) {}
+                if (!_isLoading) {
+                  _handleLogin(
+                    _usernameEditingController.text,
+                    _passwordEditingController.text,
+                  );
+                }
               },
               child: _isLoading
                   ? const SizedBox(
