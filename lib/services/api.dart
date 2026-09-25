@@ -2,13 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class Api {
-  Future<void> getData() async {
+  Future<Map<String, dynamic>> postData(
+    String username,
+    String password,
+  ) async {
     var dio = Dio();
     try {
-      Response response = await dio.get('https://dummyjson.com/auth/login');
-      print(response.data); // Handle the response
+      Response response = await dio.post(
+        'https://dummyjson.com/auth/login',
+        data: {'username': username, 'password': password},
+      );
+      return response.data;
     } catch (e) {
-      print('Error: $e');
+      throw 'Error: $e';
     }
   }
 }
