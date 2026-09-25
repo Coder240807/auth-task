@@ -19,20 +19,23 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _handleLogin(
-      _usernameEditingController.text,
-      _passwordEditingController.text,
-    );
   }
 
   Future<void> _handleLogin(String username, String password) async {
     setState(() => _isLoading = true);
     try {
       final data = await _api.postData(username, password);
+
+      setState(() {
+        _usernameEditingController.clear();
+        _passwordEditingController.clear();
+      });
     } catch (e) {
       throw Error();
     } finally {
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -41,11 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
+      appBar: AppBar(title: const Text("Login Page")),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _usernameEditingController,
@@ -59,21 +63,21 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             ElevatedButton(
-              onPressed: () {
-                if (!_isLoading) {
-                  _handleLogin(
-                    _usernameEditingController.text,
-                    _passwordEditingController.text,
-                  );
-                }
-              },
+              onPressed: _isLoading
+                  ? null
+                  : () {
+                      _handleLogin(
+                        _usernameEditingController.text,
+                        _passwordEditingController.text,
+                      );
+                    },
               child: _isLoading
                   ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(),
                     )
-                  : const Text("Logged In"),
+                  : const Text("Log In"),
             ),
           ],
         ),

@@ -6,15 +6,15 @@ class Api {
     String username,
     String password,
   ) async {
-    var dio = Dio();
+    final dio = Dio();
     try {
       Response response = await dio.post(
         'https://dummyjson.com/auth/login',
         data: {'username': username, 'password': password},
       );
       return response.data;
-    } catch (e) {
-      throw 'Error: $e';
+    } on DioException catch (e) {
+      throw Exception('Error $e');
     }
   }
 }
