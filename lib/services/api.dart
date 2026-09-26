@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class Api {
+  final dio = Dio();
   Future<Map<String, dynamic>> postData(
     String username,
     String password,
   ) async {
-    final dio = Dio();
     try {
       Response response = await dio.post(
         'https://dummyjson.com/auth/login',
@@ -19,7 +19,6 @@ class Api {
   }
 
   Future<Map<String, dynamic>> getData(String token) async {
-    final dio = Dio();
     try {
       Response response = await dio.get(
         'https://dummyjson.com/auth/me',
